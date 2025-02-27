@@ -1,49 +1,34 @@
-#include <Arduino.h>
-#include "DHT.h"
+#include <Arduino.h>  
+#include <DHT.h>  
 
-#define DHTPIN 2
+#define DHTPIN 4          
 #define DHTTYPE DHT11   
-DHT dht(DHTPIN, DHTTYPE);
 
-void setup()
-{
-    Serial.begin(9600);
-    Serial.println(F("DHT11 test!"));
+DHT dht(DHTPIN, DHTTYPE);  
 
-    dht.begin();
-}
+void setup() {  
+    Serial.begin(9600);   
+    dht.begin();            
+}  
 
-void loop()
-{
-    delay(2000);
-    // Doc do am
-    float h = dht.readHumidity();
-    // Doc nhiet do duoi do C
-    float t = dht.readTemperature();
-    // Doc nhiet do duoi do F
-    float f = dht.readTemperature(true);
+void loop() {  
+    delay(2000); 
 
-    // Kiem tra xem co doc duoc khong
-    if (isnan(h) || isnan(t) || isnan(f))
-    {
-        Serial.println(F("Không đọc được dữ liệu từ DHT11!"));
-        return;
-    }
+    float temperature = dht.readTemperature();  
+    if (isnan(temperature)) {  
+        Serial.println("Lỗi đọc nhiệt độ!");  
+        return;  
+    }  
 
-    // Chi so nhiet theo do F
-    float hif = dht.computeHeatIndex(f, h);
-    // Chi so nhiet theo do C
-    float hic = dht.computeHeatIndex(t, h, false);
+    float humidity = dht.readHumidity();  
+    if (isnan(humidity)) {  
+        Serial.println("Lỗi!");  
+        return;  
+    }  
+    Serial.print("Nhiệt độ: ");  
+    Serial.print(temperature);  
+    Serial.print(" °C, Độ ẩm: ");  
+    Serial.print(humidity);  
+    Serial.println(" %");  
 
-    Serial.print(F("Độ ẩm: "));
-    Serial.print(h);
-    Serial.print(F("%  Nhiệt độ: "));
-    Serial.print(t);
-    Serial.print(F("°C "));
-    Serial.print(f);
-    Serial.print(F("°F  Chỉ số nhiệt: "));
-    Serial.print(hic);
-    Serial.print(F("°C "));
-    Serial.print(hif);
-    Serial.println(F("°F"));
 }
