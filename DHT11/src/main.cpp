@@ -12,7 +12,7 @@ void setup() {
 }  
 
 void loop() {  
-    delay(2000); 
+    delay(2500); 
 
     float temperature = dht.readTemperature();  
     if (isnan(temperature)) {  
